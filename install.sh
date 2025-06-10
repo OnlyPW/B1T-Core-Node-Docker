@@ -131,6 +131,27 @@ install_docker_compose() {
     log_success "Docker Compose installed successfully"
 }
 
+# Create required directories
+create_directories() {
+    log_info "Creating required directories..."
+    
+    # Create data directory
+    if [[ ! -d "data" ]]; then
+        mkdir -p data
+        log_success "Created data directory"
+    else
+        log_info "Data directory already exists"
+    fi
+    
+    # Create logs directory
+    if [[ ! -d "logs" ]]; then
+        mkdir -p logs
+        log_success "Created logs directory"
+    else
+        log_info "Logs directory already exists"
+    fi
+}
+
 # Create .env file if it doesn't exist
 setup_environment() {
     log_info "Setting up environment..."
@@ -266,6 +287,9 @@ main() {
             exit 1
         fi
     fi
+    
+    # Create required directories
+    create_directories
     
     # Setup environment
     setup_environment
