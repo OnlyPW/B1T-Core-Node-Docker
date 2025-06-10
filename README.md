@@ -191,12 +191,6 @@ Die vollständige RPC-API Dokumentation finden Sie in der [B1T Core RPC Document
 
 MIT License - siehe [LICENSE](LICENSE) für Details.
 
-## 🆘 Support
-
-- **Issues**: [GitHub Issues](https://github.com/your-username/b1t-core-node/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/b1t-core-node/discussions)
-- **Discord**: [B1T Community](https://discord.gg/b1t)
-
 ---
 
 **Hinweis**: Dieses Projekt ist für Entwicklungs- und Testzwecke optimiert. Für Produktionsumgebungen sollten zusätzliche Sicherheitsmaßnahmen implementiert werden.
