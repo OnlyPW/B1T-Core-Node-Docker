@@ -273,8 +273,22 @@ build_and_start() {
         echo -e "${BLUE}CLI access:${NC} docker exec -it b1t-core-node b1t-cli help"
         
         echo
+        echo -e "${YELLOW}=== RPC Access Credentials ===${NC}"
+        if [[ -f ".env" ]]; then
+            RPC_USER=$(grep "^RPC_USER=" .env | cut -d'=' -f2)
+            RPC_PASSWORD=$(grep "^RPC_PASSWORD=" .env | cut -d'=' -f2)
+            RPC_PORT=$(grep "^RPC_PORT=" .env | cut -d'=' -f2)
+            echo -e "${BLUE}RPC Username:${NC} $RPC_USER"
+            echo -e "${BLUE}RPC Password:${NC} $RPC_PASSWORD"
+            echo -e "${BLUE}RPC Port:${NC} $RPC_PORT"
+            echo -e "${BLUE}RPC URL:${NC} http://localhost:$RPC_PORT"
+        else
+            echo -e "${RED}Could not read .env file${NC}"
+        fi
+        
+        echo
         echo -e "${YELLOW}=== Important Notes ===${NC}"
-        echo -e "1. Change the default RPC password in the .env file"
+        echo -e "1. Save the RPC credentials above - they are randomly generated"
         echo -e "2. The node data is stored in the ./data directory"
         echo -e "3. RPC is available on port 33318 (default)"
         echo -e "4. P2P is available on port 33317 (default)"
