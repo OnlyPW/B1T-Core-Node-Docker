@@ -49,7 +49,7 @@ services:
     
     # Health check
     healthcheck:
-      test: ["/usr/local/bin/healthcheck.sh"]
+      test: CMD-SHELL "/usr/local/bin/healthcheck.sh"
       interval: 30s
       timeout: 10s
       retries: 3
