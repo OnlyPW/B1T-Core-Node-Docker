@@ -221,12 +221,56 @@ build_and_start() {
         echo -e "${GREEN}=== B1T Core Node Status ===${NC}"
         $COMPOSE_CMD ps
         
+        # Check node status after 15 seconds
+        echo
+        log_info "Waiting 15 seconds before checking node status..."
+        sleep 15
+        
+        echo -e "${BLUE}=== Node Status Check (15s) ===${NC}"
+        if docker exec b1t-core-node b1t-cli getblockchaininfo 2>/dev/null; then
+            log_success "Node is responding to CLI commands after 15 seconds"
+        else
+            log_warning "Node not yet responding to CLI commands after 15 seconds"
+            echo "Container logs:"
+            $COMPOSE_CMD logs --tail=10 b1t-core
+        fi
+        
+        # Check node status after 30 seconds total
+        echo
+        log_info "Waiting additional 15 seconds (30s total) for final status check..."
+        sleep 15
+        
+        echo -e "${BLUE}=== Final Node Status Check (30s) ===${NC}"
+        if docker exec b1t-core-node b1t-cli getblockchaininfo 2>/dev/null; then
+            log_success "Node is fully operational!"
+            
+            echo
+            echo -e "${GREEN}=== Node Information ===${NC}"
+            echo -e "${BLUE}Blockchain Info:${NC}"
+            docker exec b1t-core-node b1t-cli getblockchaininfo 2>/dev/null || echo "Unable to get blockchain info"
+            
+            echo
+            echo -e "${BLUE}Network Info:${NC}"
+            docker exec b1t-core-node b1t-cli getnetworkinfo 2>/dev/null || echo "Unable to get network info"
+            
+            echo
+            echo -e "${BLUE}Peer Connections:${NC}"
+            PEER_COUNT=$(docker exec b1t-core-node b1t-cli getconnectioncount 2>/dev/null || echo "0")
+            echo "Connected peers: $PEER_COUNT"
+            
+        else
+            log_warning "Node still not responding after 30 seconds"
+            echo "This might be normal for initial sync. Check logs for details:"
+            $COMPOSE_CMD logs --tail=20 b1t-core
+        fi
+        
         echo
         echo -e "${GREEN}=== Useful Commands ===${NC}"
         echo -e "${BLUE}View logs:${NC} $COMPOSE_CMD logs -f"
         echo -e "${BLUE}Stop node:${NC} $COMPOSE_CMD down"
         echo -e "${BLUE}Restart node:${NC} $COMPOSE_CMD restart"
         echo -e "${BLUE}Check status:${NC} $COMPOSE_CMD ps"
+        echo -e "${BLUE}CLI access:${NC} docker exec -it b1t-core-node b1t-cli help"
         
         echo
         echo -e "${YELLOW}=== Important Notes ===${NC}"
@@ -234,6 +278,7 @@ build_and_start() {
         echo -e "2. The node data is stored in the ./data directory"
         echo -e "3. RPC is available on port 33318 (default)"
         echo -e "4. P2P is available on port 33317 (default)"
+        echo -e "5. Initial blockchain sync may take some time"
         
     else
         log_error "Failed to start B1T Core Node"
