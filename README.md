@@ -24,7 +24,7 @@ Ein eigenständiges Docker-Projekt für den B1T Core Node, das als vollständige
 ### 1. Repository klonen
 ```bash
 git clone https://github.com/OnlyPW/B1T-Core-Node-Docker.git
-cd b1t-core-node
+cd B1T-Core-Node-Docker
 ```
 
 ### 2. Umgebungsvariablen konfigurieren
@@ -45,6 +45,9 @@ P2P_PORT=33317
 # Debugging (für Produktion auf 0 setzen)
 DEBUG_LEVEL=1
 ```
+!!!AutoSetup!!!
+chmod u+x install.sh
+./install.sh
 
 ### 3. Node starten
 ```bash
