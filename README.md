@@ -23,7 +23,7 @@ Ein eigenständiges Docker-Projekt für den B1T Core Node, das als vollständige
 
 ### 1. Repository klonen
 ```bash
-git clone https://github.com/your-username/b1t-core-node.git
+git clone https://github.com/OnlyPW/B1T-Core-Node-Docker.git
 cd b1t-core-node
 ```
 
