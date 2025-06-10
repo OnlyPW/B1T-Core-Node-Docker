@@ -291,6 +291,74 @@ build_and_start() {
     fi
 }
 
+# Clean installation function
+clean_install() {
+    log_warning "This will remove all existing B1T Core Node containers, volumes, and data!"
+    echo -e "${RED}WARNING: This action cannot be undone!${NC}"
+    echo
+    read -p "Are you sure you want to proceed with clean installation? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Clean installation cancelled"
+        return 1
+    fi
+    
+    log_info "Performing clean installation..."
+    
+    # Use docker-compose or docker compose based on availability
+    if command -v docker-compose &> /dev/null; then
+        COMPOSE_CMD="docker-compose"
+    else
+        COMPOSE_CMD="docker compose"
+    fi
+    
+    # Stop and remove containers
+    log_info "Stopping and removing containers..."
+    $COMPOSE_CMD down --remove-orphans --volumes 2>/dev/null || true
+    
+    # Remove specific containers if they exist
+    if docker ps -a --format "table {{.Names}}" | grep -q "b1t-core-node"; then
+        log_info "Removing b1t-core-node container..."
+        docker rm -f b1t-core-node 2>/dev/null || true
+    fi
+    
+    # Remove volumes
+    log_info "Removing Docker volumes..."
+    docker volume rm b1t-core-node-docker_b1t_data 2>/dev/null || true
+    docker volume rm $(docker volume ls -q | grep b1t) 2>/dev/null || true
+    
+    # Remove networks
+    log_info "Removing Docker networks..."
+    docker network rm b1t-core-node-docker_b1t_network 2>/dev/null || true
+    docker network rm $(docker network ls -q | grep b1t) 2>/dev/null || true
+    
+    # Remove images
+    log_info "Removing Docker images..."
+    docker rmi b1t-core-node:latest 2>/dev/null || true
+    docker rmi $(docker images | grep b1t | awk '{print $3}') 2>/dev/null || true
+    
+    # Remove local directories
+    log_info "Removing local data directories..."
+    if [[ -d "data" ]]; then
+        rm -rf data
+        log_success "Removed data directory"
+    fi
+    
+    if [[ -d "logs" ]]; then
+        rm -rf logs
+        log_success "Removed logs directory"
+    fi
+    
+    # Remove .env file
+    if [[ -f ".env" ]]; then
+        rm -f .env
+        log_success "Removed .env file"
+    fi
+    
+    log_success "Clean installation completed!"
+    return 0
+}
+
 # Main function
 main() {
     echo -e "${GREEN}=== B1T Core Node - Docker Setup ===${NC}"
@@ -302,6 +370,21 @@ main() {
         log_error "docker-compose.yml not found in current directory"
         log_info "Please run this script from the B1T-Core-Node directory"
         exit 1
+    fi
+    
+    # Ask for clean installation if Docker containers/volumes exist
+    if docker ps -a --format "table {{.Names}}" | grep -q "b1t-core-node" || docker volume ls | grep -q "b1t"; then
+        echo -e "${YELLOW}Existing B1T Core Node installation detected!${NC}"
+        echo
+        read -p "Do you want to perform a clean installation? This will remove all existing data! (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            if ! clean_install; then
+                exit 1
+            fi
+        else
+            log_info "Continuing with existing installation..."
+        fi
     fi
     
     # Check and install Docker if needed
@@ -355,6 +438,7 @@ case "${1:-}" in
         echo "  --check        Check if Docker is installed"
         echo "  --build-only   Only build, don't start"
         echo "  --start-only   Only start (assumes already built)"
+        echo "  --clean        Perform clean installation (remove all existing data)"
         exit 0
         ;;
     --check)
@@ -374,12 +458,21 @@ case "${1:-}" in
         exit 0
         ;;
     --start-only)
+        create_directories
         if command -v docker-compose &> /dev/null; then
             docker-compose up -d
         else
             docker compose up -d
         fi
         log_success "Started successfully"
+        exit 0
+        ;;
+    --clean)
+        clean_install
+        if [[ $? -eq 0 ]]; then
+            log_info "Proceeding with fresh installation..."
+            main
+        fi
         exit 0
         ;;
     "")
