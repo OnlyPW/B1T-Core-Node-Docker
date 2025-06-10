@@ -1,0 +1,266 @@
+# B1T Core Node - Git Ignore File
+
+# =============================================================================
+# Environment and Configuration
+# =============================================================================
+
+# Environment variables (contains sensitive data)
+.env
+.env.local
+.env.production
+.env.staging
+
+# =============================================================================
+# Blockchain Data
+# =============================================================================
+
+# Blockchain data directory
+data/
+blockchain/
+.b1t/
+
+# Wallet files (contain private keys)
+wallet.dat
+wallet.dat.bak
+*.wallet
+
+# =============================================================================
+# Logs and Debug Files
+# =============================================================================
+
+# Log files
+logs/
+*.log
+debug.log
+error.log
+access.log
+
+# Debug files
+*.dmp
+*.dump
+core.*
+
+# =============================================================================
+# Docker
+# =============================================================================
+
+# Docker volumes
+volumes/
+
+# Docker build cache
+.dockerignore.bak
+
+# =============================================================================
+# Backup Files
+# =============================================================================
+
+# Backup directories
+backups/
+*.backup
+*.bak
+*.old
+
+# Compressed backups
+*.tar.gz
+*.zip
+*.7z
+*.rar
+
+# =============================================================================
+# Temporary Files
+# =============================================================================
+
+# Temporary directories
+tmp/
+temp/
+.tmp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# =============================================================================
+# IDE and Editor Files
+# =============================================================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# =============================================================================
+# Package Managers
+# =============================================================================
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# =============================================================================
+# Security and Sensitive Data
+# =============================================================================
+
+# Private keys and certificates
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# API keys and secrets
+secrets/
+*.secret
+api-keys.txt
+
+# =============================================================================
+# Build and Distribution
+# =============================================================================
+
+# Build outputs
+build/
+dist/
+out/
+target/
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# =============================================================================
+# Testing
+# =============================================================================
+
+# Test outputs
+test-results/
+coverage/
+*.coverage
+.nyc_output
+
+# =============================================================================
+# Documentation
+# =============================================================================
+
+# Generated documentation
+docs/_build/
+site/
+
+# =============================================================================
+# Monitoring and Metrics
+# =============================================================================
+
+# Monitoring data
+metrics/
+monitoring/
+*.metrics
+
+# Performance profiles
+*.prof
+*.pprof
+
+# =============================================================================
+# Custom Application Files
+# =============================================================================
+
+# Configuration overrides
+config.local.*
+override.*
+
+# Runtime files
+*.pid
+*.sock
+*.lock
+
+# Cache directories
+cache/
+.cache/
+
+# =============================================================================
+# Archive and Compressed Files
+# =============================================================================
+
+# Archives (unless specifically needed)
+*.tar
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.zip
+*.7z
+*.rar
+*.gz
+*.bz2
+*.xz
+
+# =============================================================================
+# Network and Communication
+# =============================================================================
+
+# Network dumps
+*.pcap
+*.pcapng
+
+# =============================================================================
+# End of File
+# =============================================================================

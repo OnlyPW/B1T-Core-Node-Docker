@@ -1,0 +1,184 @@
+{
+  "name": "b1t-core-node",
+  "version": "2.1.0",
+  "description": "Standalone B1T Core Node Docker project for blockchain network participation",
+  "main": "scripts/setup.js",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down",
+    "restart": "docker-compose restart",
+    "build": "docker-compose build --no-cache",
+    "rebuild": "npm run stop && npm run build && npm run start",
+    "logs": "docker-compose logs -f",
+    "logs:tail": "docker-compose logs --tail=100",
+    "status": "docker-compose ps",
+    "health": "docker-compose exec -T b1t-core /usr/local/bin/healthcheck.sh",
+    "cli": "docker-compose exec b1t-core bash",
+    "shell": "docker-compose exec b1t-core bash",
+    "info": "docker-compose exec -T b1t-core b1t-cli getblockchaininfo",
+    "network-info": "docker-compose exec -T b1t-core b1t-cli getnetworkinfo",
+    "peers": "docker-compose exec -T b1t-core b1t-cli getpeerinfo",
+    "block-count": "docker-compose exec -T b1t-core b1t-cli getblockcount",
+    "wallet-info": "docker-compose exec -T b1t-core b1t-cli getwalletinfo",
+    "test-rpc": "node scripts/test-rpc.js",
+    "backup": "node scripts/backup.js",
+    "clean": "docker-compose down -v --remove-orphans && docker image rm b1t-core-node 2>/dev/null || true",
+    "update": "npm run backup && npm run rebuild",
+    "monitor": "node scripts/monitor.js",
+    "validate-config": "node scripts/validate-config.js",
+    "generate-config": "node scripts/generate-config.js",
+    "docker:prune": "docker system prune -f",
+    "docker:clean": "docker container prune -f && docker image prune -f",
+    "dev": "npm run build && npm run start && npm run logs",
+    "prod": "NODE_ENV=production npm run start",
+    "test": "node scripts/test-suite.js",
+    "lint": "eslint scripts/ --fix",
+    "format": "prettier --write scripts/ *.md *.json",
+    "docs": "node scripts/generate-docs.js",
+    "security-scan": "node scripts/security-scan.js",
+    "performance-check": "node scripts/performance-check.js"
+  },
+  "keywords": [
+    "b1t",
+    "bitcoin",
+    "blockchain",
+    "cryptocurrency",
+    "node",
+    "docker",
+    "rpc",
+    "p2p",
+    "scrypt",
+    "auxpow",
+    "mining",
+    "wallet",
+    "transaction",
+    "network"
+  ],
+  "author": {
+    "name": "B1T Core Team",
+    "email": "dev@b1t.network",
+    "url": "https://b1t.network"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/b1t-project/b1t-core-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/b1t-project/b1t-core-node/issues"
+  },
+  "homepage": "https://github.com/b1t-project/b1t-core-node#readme",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0",
+    "docker": ">=20.10.0",
+    "docker-compose": ">=2.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "commander": "^11.1.0",
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1",
+    "fs-extra": "^11.2.0",
+    "moment": "^2.29.4",
+    "node-cron": "^3.0.3",
+    "ws": "^8.16.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "winston": "^3.11.0",
+    "joi": "^17.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.1.1",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "nodemon": "^3.0.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.33.1",
+    "canvas": "^2.11.2"
+  },
+  "peerDependencies": {
+    "docker": ">=20.10.0",
+    "docker-compose": ">=2.0.0"
+  },
+  "config": {
+    "b1t-core": {
+      "version": "2.1.0.0",
+      "download-url": "https://github.com/bittoshimoto/Bit/releases/download/Bit.v.2.1.0.0/Bit.v.2.1.0.0.tar.gz",
+      "default-rpc-port": 33318,
+      "default-p2p-port": 33317,
+      "min-disk-space": "50GB",
+      "recommended-ram": "4GB"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "scripts/**/*.js",
+      "!scripts/test-*.js"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ]
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/b1t-project"
+  },
+  "os": [
+    "linux",
+    "darwin",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "directories": {
+    "doc": "docs",
+    "test": "tests",
+    "example": "examples"
+  },
+  "files": [
+    "scripts/",
+    "docs/",
+    "examples/",
+    "Dockerfile",
+    "docker-compose.yml",
+    ".env.example",
+    "Makefile",
+    "LICENSE",
+    "README.md"
+  ]
+}

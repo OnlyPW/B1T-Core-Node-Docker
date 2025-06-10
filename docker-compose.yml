@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  b1t-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: b1t-core-node:latest
+    container_name: b1t-core-node
+    restart: unless-stopped
+    
+    # Environment variables
+    environment:
+      - RPC_USER=${RPC_USER:-b1tuser}
+      - RPC_PASSWORD=${RPC_PASSWORD:-b1tpassword}
+      - RPC_PORT=${RPC_PORT:-33318}
+      - P2P_PORT=${P2P_PORT:-33317}
+      - DEBUG_LEVEL=${DEBUG_LEVEL:-1}
+      - TX_INDEX=${TX_INDEX:-1}
+      - ADDRESS_INDEX=${ADDRESS_INDEX:-1}
+      - ENABLE_WALLET=${ENABLE_WALLET:-1}
+      - DISABLE_WALLET=${DISABLE_WALLET:-0}
+      - DB_CACHE=${DB_CACHE:-512}
+      - MAX_MEMPOOL=${MAX_MEMPOOL:-300}
+    
+    # Port mappings
+    ports:
+      - "${RPC_PORT:-33318}:${RPC_PORT:-33318}"  # RPC Port
+      - "${P2P_PORT:-33317}:${P2P_PORT:-33317}"  # P2P Port
+    
+    # Volume mappings
+    volumes:
+      - b1t_data:/home/b1t/.b1t
+      - ./logs:/home/b1t/.b1t/logs:rw
+    
+    # Network configuration
+    networks:
+      - b1t_network
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+    
+    # Health check
+    healthcheck:
+      test: ["/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    
+    # Read-only root filesystem (with exceptions)
+    read_only: false
+    
+    # Temporary filesystems
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+
+# Named volumes
+volumes:
+  b1t_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_DIR:-./data}
+
+# Networks
+networks:
+  b1t_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

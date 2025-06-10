@@ -1,0 +1,89 @@
+MIT License
+
+Copyright (c) 2024 B1T Core Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILIY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+This project includes B1T Core binaries which are distributed under their own license terms.
+Please refer to the official B1T Core repository for more information about the core software licensing.
+
+B1T Core Repository: https://github.com/bittoshimoto/Bit
+
+---
+
+THIRD-PARTY LICENSES
+
+This project may include third-party software components, each with their own license terms:
+
+1. Docker - Apache License 2.0
+2. Ubuntu Base Image - Various licenses (see Ubuntu documentation)
+3. Node.js dependencies - Various licenses (see package.json and node_modules)
+
+For a complete list of third-party licenses, please run:
+  npm list --depth=0
+  
+Or check the individual package.json files in node_modules for specific license information.
+
+---
+
+DISCLAIMER
+
+This software is provided for educational and development purposes. Users are responsible for:
+
+1. Ensuring compliance with local laws and regulations regarding cryptocurrency software
+2. Securing their private keys and wallet data
+3. Regular backups of blockchain data
+4. Monitoring system resources and security
+5. Understanding the risks associated with running blockchain software
+
+The authors and contributors are not responsible for any loss of funds, data corruption, 
+security breaches, or other damages that may result from using this software.
+
+USE AT YOUR OWN RISK.
+
+---
+
+CONTRIBUTION
+
+By contributing to this project, you agree that your contributions will be licensed under the same MIT License.
+
+Contributions should follow the project's coding standards and include appropriate tests and documentation.
+
+For more information about contributing, please see the CONTRIBUTING.md file (if available) or contact the maintainers.
+
+---
+
+SUPPORT
+
+This is an open-source project maintained by volunteers. While we strive to provide a stable and secure platform, 
+we cannot guarantee immediate support or bug fixes.
+
+For support:
+1. Check the documentation and README.md
+2. Search existing GitHub issues
+3. Create a new issue with detailed information
+4. Join the community discussions
+
+Commercial support may be available through third-party providers.
+
+---
+
+Last updated: 2024
