@@ -106,6 +106,57 @@ install_docker() {
     esac
 }
 
+# Configure RPC access for external connections
+configure_rpc_access() {
+    log_info "Configuring RPC access for external connections..."
+    
+    # Wait for container to be fully started
+    sleep 5
+    
+    # Get server's external IP (optional)
+    EXTERNAL_IP=$(curl -s ifconfig.me 2>/dev/null || echo "")
+    
+    # Add localhost access
+    log_info "Adding localhost access..."
+    docker exec b1t-core-node bash -c "echo 'rpcallowip=127.0.0.1/32' >> /home/b1t/.b1t/b1t.conf" 2>/dev/null || true
+    
+    # Add external IP if detected
+    if [[ -n "$EXTERNAL_IP" ]]; then
+        log_info "Adding external IP access: $EXTERNAL_IP"
+        docker exec b1t-core-node bash -c "echo 'rpcallowip=$EXTERNAL_IP/32' >> /home/b1t/.b1t/b1t.conf" 2>/dev/null || true
+    fi
+    
+    # Ask user if they want to allow all IPs (less secure)
+    echo
+    echo -e "${YELLOW}=== RPC Access Configuration ===${NC}"
+    echo -e "${BLUE}Current configuration allows:${NC}"
+    echo -e "- Localhost (127.0.0.1)"
+    if [[ -n "$EXTERNAL_IP" ]]; then
+        echo -e "- Your external IP ($EXTERNAL_IP)"
+    fi
+    echo
+    echo -e "${RED}WARNING: Allowing all IPs (0.0.0.0/0) is less secure!${NC}"
+    read -p "Do you want to allow RPC access from ALL IPs? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        log_warning "Adding access for all IPs (0.0.0.0/0) - SECURITY RISK!"
+        docker exec b1t-core-node bash -c "echo 'rpcallowip=0.0.0.0/0' >> /home/b1t/.b1t/b1t.conf" 2>/dev/null || true
+    fi
+    
+    # Restart container to apply changes
+    log_info "Restarting container to apply RPC configuration..."
+    if command -v docker-compose &> /dev/null; then
+        docker-compose restart b1t-core
+    else
+        docker compose restart b1t-core
+    fi
+    
+    # Wait for restart
+    sleep 10
+    
+    log_success "RPC access configuration completed!"
+}
+
 # Check if Docker Compose is available
 check_docker_compose() {
     if command -v docker-compose &> /dev/null; then
@@ -264,6 +315,9 @@ build_and_start() {
             $COMPOSE_CMD logs --tail=20 b1t-core
         fi
         
+        # Configure RPC access for external connections
+        configure_rpc_access
+        
         echo
         echo -e "${GREEN}=== Useful Commands ===${NC}"
         echo -e "${BLUE}View logs:${NC} $COMPOSE_CMD logs -f"
@@ -293,6 +347,7 @@ build_and_start() {
         echo -e "3. RPC is available on port 33318 (default)"
         echo -e "4. P2P is available on port 33317 (default)"
         echo -e "5. Initial blockchain sync may take some time"
+        echo -e "6. RPC access has been configured for external connections"
         
     else
         log_error "Failed to start B1T Core Node"
